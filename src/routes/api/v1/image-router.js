@@ -9,16 +9,16 @@ const controller = new ImagesController()
 
 const authenticateJWT = (req, res, next) => {
     const auth = req.headers.authorization?.split(' ')
-    const scheme = auth[0]
-    const token = auth[1]
     
-    if (scheme !== 'Bearer') {
+    if (auth?.[0] !== 'Bearer') {
         next(createError(401))
         return
     }
-  try {
-    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    
+    try {
+    const payload = jwt.verify(auth[1], process.env.ACCESS_TOKEN_SECRET)
 
+    console.log(payload)
     req.user = {
       username: payload.sub,
       firstName: payload.first_name,
@@ -28,10 +28,11 @@ const authenticateJWT = (req, res, next) => {
     }
     next()
   } catch (error) {
+      console.log(error)
       const err = createError(401)
       err.cause = error
       next(err)
   }
 }
 
-router.post('/', (req, res, next) => controller.createImage(req, res, next))
+router.post('/', authenticateJWT, (req, res, next) => controller.createImage(req, res, next))

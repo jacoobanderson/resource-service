@@ -2,7 +2,7 @@ import express from 'express'
 import helmet from 'helmet'
 import logger from 'morgan'
 import { connectDB } from './config/mongoose.js'
-// import { router } from './routes/router.js'
+import { router } from './routes/router.js'
 
 try {
   await connectDB()
@@ -17,7 +17,7 @@ try {
 
   app.use((express.json({ limit: '500kb' })))
 
-  // app.use('/', router)
+  app.use('/', router)
 
   // Error handler.
   app.use(function (err, req, res, next) {

@@ -14,6 +14,8 @@ export class ImagesController {
    */
   async createImage (req, res, next) {
     try {
+        console.log('works')
+
       const response = await fetch(process.env.IMAGE_URL, {
         method: 'POST',
         headers: {
