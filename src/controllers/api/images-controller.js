@@ -1,8 +1,6 @@
-import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { Image } from '../../models/image.js'
 import fetch from 'node-fetch'
-import { response } from 'express'
 
 /**
  * Encapsulates a controller.
