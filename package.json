@@ -1,0 +1,34 @@
+{
+  "name": "resource-service",
+  "version": "1.0.0",
+  "description": "The resource service is responsible for handling resources in the system.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon --inspect -r dotenv/config src/server.js",
+    "lint": "npx eslint ./src || exit 0",
+    "lint:fix": "npx eslint ./src --fix || exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.lnu.se:1dv026/student/ja224iy/assignment-b3-picture-it/resource-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "helmet": "^5.0.2",
+    "http-errors": "^1.7.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.8",
+    "morgan": "^1.10.0",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "@lnu/eslint-config": "^1.1.4",
+    "dotenv": "^14.3.0",
+    "nodemon": "^2.0.15"
+  }
+}
