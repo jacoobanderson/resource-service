@@ -1,8 +1,4 @@
-import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
-import validator from 'validator'
-
-const { isEmail } = validator
 
 const schema = new mongoose.Schema({
   imageUrl: {
@@ -39,4 +35,4 @@ schema.virtual('id').get(function () {
   return this._id.toHexString()
 })
 
-export const User = mongoose.model('User', schema)
+export const Image = mongoose.model('Image', schema)
