@@ -103,4 +103,20 @@ export class ImagesController {
           next(error)
       }
   }
+
+  async deleteImage(req, res, next) {
+      try {
+          await fetch(process.env.IMAGE_URL + '/' + req.image.imageId, {
+            method: 'DELETE',
+            headers: {
+              'X-API-Private-Token': process.env.PERSONAL_ACCESS_TOKEN
+            }
+          })
+          
+          await req.image.delete()
+          res.status(204).end()
+      } catch (error) {
+          next(error)
+      }
+  }
 }
