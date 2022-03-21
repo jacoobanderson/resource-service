@@ -26,7 +26,6 @@ export class ImagesController {
         })
       })
       const data = await response.json()
-      console.log(data)
 
       const image = new Image({
         imageUrl: data.imageUrl,
@@ -97,7 +96,6 @@ export class ImagesController {
               updatedAt: req.image.updatedAt,
               id: req.image.id
           }
-          console.log(image)
           res.json(image)
       } catch (error) {
           next(error)
@@ -114,6 +112,32 @@ export class ImagesController {
           })
           
           await req.image.delete()
+          res.status(204).end()
+      } catch (error) {
+          next(error)
+      }
+  }
+
+  async editImage(req, res, next) {
+      try {
+          await fetch(process.env.IMAGE_URL + '/' + req.image.imageId, {
+              method: 'PUT',
+              headers: {
+                'X-API-Private-Token': process.env.PERSONAL_ACCESS_TOKEN
+              },
+              body: JSON.stringify({
+                data: req.body.data,
+                contentType: req.body.contentType,
+                description: req.body.description,
+                location: req.body.location
+            })
+          })
+          await req.image.update({
+            data: req.body.data,
+            contentType: req.body.contentType,
+            description: req.body.description,
+            location: req.body.location
+          })
           res.status(204).end()
       } catch (error) {
           next(error)
