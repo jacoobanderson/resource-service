@@ -78,11 +78,29 @@ export class ImagesController {
 
   async setImage(req, res, next, id) {
     try {
-        const image = Image.findById(id)
+        const image = await Image.findById(id)
+        console.log(image)
         req.image = image
         next()
     } catch (error) {
         next(error)
     }
+  }
+
+  async getSingleImage(req, res, next) {
+      try {
+          const image = {
+              imageUrl: req.image.imageUrl,
+              description: req.image.description,
+              location: req.image.location,
+              createdAt: req.image.createdAt,
+              updatedAt: req.image.updatedAt,
+              id: req.image.id
+          }
+          console.log(image)
+          res.json(image)
+      } catch (error) {
+          next(error)
+      }
   }
 }
