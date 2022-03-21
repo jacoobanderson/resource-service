@@ -15,7 +15,7 @@ const schema = new mongoose.Schema({
   imageId: {
     type: String
   },
-  user: {
+  userId: {
     type: String
   },
   contentType: {

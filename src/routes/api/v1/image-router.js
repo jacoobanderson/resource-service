@@ -7,6 +7,13 @@ export const router = express.Router()
 
 const controller = new ImagesController()
 
+const PermissionLevels = Object.freeze({
+  READ: 1,
+  CREATE: 2,
+  UPDATE: 4,
+  DELETE: 8
+})
+
 /**
  *
  * @param req
@@ -25,7 +32,8 @@ const authenticateJWT = (req, res, next) => {
     const payload = jwt.verify(auth[1], process.env.ACCESS_TOKEN_SECRET)
     req.user = {
       username: payload.sub,
-      permissionLevel: payload.x_permission_level
+      permissionLevel: payload.x_permission_level,
+      id: payload.id
     }
     next()
   } catch (error) {
@@ -36,8 +44,40 @@ const authenticateJWT = (req, res, next) => {
   }
 }
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @param permissionLevel
+ */
+const checkPermission = (req, res, next, permissionLevel) => {
+  req.user?.permissionLevel & permissionLevel ? next() : next(createError(403))
+  console.log(req.user.permissionLevel)
+}
+
 router.param('id', (req, res, next, id) => controller.setImage(req, res, next, id))
-router.get('/', authenticateJWT, (req, res, next) => controller.getAllImages(req, res, next))
-router.post('/', authenticateJWT, (req, res, next) => controller.createImage(req, res, next))
-router.get('/:id', authenticateJWT, (req, res, next) => controller.getSingleImage(req, res, next))
-router.delete('/:id', authenticateJWT, (req, res, next) => controller.deleteImage(req, res, next))
+router.get('/',
+  authenticateJWT,
+  (req, res, next) => checkPermission(req, res, next, PermissionLevels.READ),
+  (req, res, next) => controller.getAllImages(req, res, next))
+
+router.post('/', authenticateJWT,
+  (req, res, next) => checkPermission(req, res, next, PermissionLevels.CREATE),
+  (req, res, next) => controller.createImage(req, res, next))
+
+router.get('/:id', authenticateJWT,
+  (req, res, next) => checkPermission(req, res, next, PermissionLevels.READ),
+  (req, res, next) => controller.getSingleImage(req, res, next))
+
+router.delete('/:id', authenticateJWT,
+  (req, res, next) => checkPermission(req, res, next, PermissionLevels.DELETE),
+  (req, res, next) => controller.deleteImage(req, res, next))
+
+router.put('/:id', authenticateJWT,
+  (req, res, next) => checkPermission(req, res, next, PermissionLevels.UPDATE),
+  (req, res, next) => controller.editImage(req, res, next))
+
+router.patch('/:id', authenticateJWT,
+  (req, res, next) => checkPermission(req, res, next, PermissionLevels.UPDATE),
+  (req, res, next) => controller.partiallyEditImage(req, res, next))
