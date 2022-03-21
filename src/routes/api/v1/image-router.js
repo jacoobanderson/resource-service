@@ -7,18 +7,22 @@ export const router = express.Router()
 
 const controller = new ImagesController()
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 const authenticateJWT = (req, res, next) => {
-    const auth = req.headers.authorization?.split(' ')
-    
-    if (auth?.[0] !== 'Bearer') {
-        next(createError(401))
-        return
-    }
-    
-    try {
-    const payload = jwt.verify(auth[1], process.env.ACCESS_TOKEN_SECRET)
+  const auth = req.headers.authorization?.split(' ')
 
-    console.log(payload)
+  if (auth?.[0] !== 'Bearer') {
+    next(createError(401))
+    return
+  }
+
+  try {
+    const payload = jwt.verify(auth[1], process.env.ACCESS_TOKEN_SECRET)
     req.user = {
       username: payload.sub,
       firstName: payload.first_name,
@@ -28,10 +32,10 @@ const authenticateJWT = (req, res, next) => {
     }
     next()
   } catch (error) {
-      console.log(error)
-      const err = createError(401)
-      err.cause = error
-      next(err)
+    console.log(error)
+    const err = createError(401)
+    err.cause = error
+    next(err)
   }
 }
 

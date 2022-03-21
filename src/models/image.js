@@ -14,6 +14,9 @@ const schema = new mongoose.Schema({
   },
   imageId: {
     type: String
+  },
+  user: {
+    type: String
   }
 }, {
   timestamps: true,

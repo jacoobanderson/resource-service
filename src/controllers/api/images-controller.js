@@ -14,8 +14,6 @@ export class ImagesController {
    */
   async createImage (req, res, next) {
     try {
-        console.log('works')
-
       const response = await fetch(process.env.IMAGE_URL, {
         method: 'POST',
         headers: {
@@ -28,13 +26,17 @@ export class ImagesController {
         })
       })
       const data = await response.json()
+      console.log(data)
 
       const image = new Image({
         imageUrl: data.imageUrl,
         description: req.body.description,
         location: req.body.location,
-        imageId: data.id
+        imageId: data.id,
+        user: req.user.username
       })
+
+      image.save()
 
       const responseImage = {
         id: image.imageId,
@@ -49,5 +51,20 @@ export class ImagesController {
     } catch (error) {
       next(error)
     }
+  }
+
+  async getAllImages(req, res, next) {
+      try {
+          const images = Image.find()
+          const resImages = []
+          images.forEach(image => {
+              if (image.user === req.user.username) {
+                resImages.push(image)
+              }
+          })
+          res.json(resImages)
+      } catch (error) {
+          next(error)
+      }
   }
 }
