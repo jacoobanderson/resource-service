@@ -123,6 +123,7 @@ export class ImagesController {
           await fetch(process.env.IMAGE_URL + '/' + req.image.imageId, {
               method: 'PUT',
               headers: {
+                'Content-Type': 'application/json',
                 'X-API-Private-Token': process.env.PERSONAL_ACCESS_TOKEN
               },
               body: JSON.stringify({
@@ -141,6 +142,28 @@ export class ImagesController {
           res.status(204).end()
       } catch (error) {
           next(error)
+      }
+  }
+
+  async partiallyEditImage(req, res, next) {
+      try {
+        await fetch(process.env.IMAGE_URL + '/' + req.image.imageId, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-API-Private-Token': process.env.PERSONAL_ACCESS_TOKEN
+            },
+            body: JSON.stringify({
+              description: req.body.description
+          })
+        })
+
+        await req.image.update({
+            description: req.body.description
+        })
+        res.status(204).end()
+      } catch (error) {
+          
       }
   }
 }
