@@ -33,17 +33,18 @@ export class ImagesController {
         description: req.body.description,
         location: req.body.location,
         imageId: data.id,
-        user: req.user.username
+        user: req.user.username,
+        contentType: data.contentType
       })
 
-      image.save()
+      await image.save()
 
       const responseImage = {
-        id: image.imageId,
         imageUrl: image.imageUrl,
-        contentType: req.body.contentType,
+        contentType: image.contentType,
         createdAt: image.createdAt,
-        updatedAt: image.updatedAt
+        updatedAt: image.updatedAt,
+        id: image.imageId
       }
       res
         .status(201)
@@ -55,16 +56,33 @@ export class ImagesController {
 
   async getAllImages(req, res, next) {
       try {
-          const images = Image.find()
+          const images = await Image.find({})
           const resImages = []
           images.forEach(image => {
               if (image.user === req.user.username) {
-                resImages.push(image)
+                resImages.push({
+                    imageUrl: image.imageUrl,
+                    description: image.description,
+                    location: image.location,
+                    createdAt: image.createdAt,
+                    updatedAt: image.updatedAt,
+                    id: image.id
+                })
               }
           })
           res.json(resImages)
       } catch (error) {
           next(error)
       }
+  }
+
+  async setImage(req, res, next, id) {
+    try {
+        const image = Image.findById(id)
+        req.image = image
+        next()
+    } catch (error) {
+        next(error)
+    }
   }
 }

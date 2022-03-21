@@ -25,9 +25,6 @@ const authenticateJWT = (req, res, next) => {
     const payload = jwt.verify(auth[1], process.env.ACCESS_TOKEN_SECRET)
     req.user = {
       username: payload.sub,
-      firstName: payload.first_name,
-      lastName: payload.last_name,
-      email: payload.email,
       permissionLevel: payload.x_permission_level
     }
     next()
@@ -39,4 +36,6 @@ const authenticateJWT = (req, res, next) => {
   }
 }
 
+router.param('id', (req, res, next, id) => controller.setImage(req, res, next, id))
+router.get('/', authenticateJWT, (req, res, next) => controller.getAllImages(req, res, next))
 router.post('/', authenticateJWT, (req, res, next) => controller.createImage(req, res, next))
