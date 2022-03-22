@@ -1,4 +1,3 @@
-import createError from 'http-errors'
 import { Image } from '../../models/image.js'
 import fetch from 'node-fetch'
 
@@ -7,10 +6,11 @@ import fetch from 'node-fetch'
  */
 export class ImagesController {
   /**
+   * Creates an image.
    *
-   * @param req
-   * @param res
-   * @param next
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
    */
   async createImage (req, res, next) {
     try {
@@ -54,24 +54,25 @@ export class ImagesController {
   }
 
   /**
+   * Gets all the images.
    *
-   * @param req
-   * @param res
-   * @param next
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
    */
   async getAllImages (req, res, next) {
     try {
       const images = await Image.find({})
       const resImages = []
       images.forEach(image => {
-          resImages.push({
-            imageUrl: image.imageUrl,
-            description: image.description,
-            location: image.location,
-            createdAt: image.createdAt,
-            updatedAt: image.updatedAt,
-            id: image.id
-          })
+        resImages.push({
+          imageUrl: image.imageUrl,
+          description: image.description,
+          location: image.location,
+          createdAt: image.createdAt,
+          updatedAt: image.updatedAt,
+          id: image.id
+        })
       })
       res.json(resImages)
     } catch (error) {
@@ -80,11 +81,12 @@ export class ImagesController {
   }
 
   /**
+   * Sets the image in req.
    *
-   * @param req
-   * @param res
-   * @param next
-   * @param id
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   * @param {string} id - The id of the image.
    */
   async setImage (req, res, next, id) {
     try {
@@ -97,10 +99,11 @@ export class ImagesController {
   }
 
   /**
+   * Gets a single image.
    *
-   * @param req
-   * @param res
-   * @param next
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
    */
   async getSingleImage (req, res, next) {
     try {
@@ -119,10 +122,11 @@ export class ImagesController {
   }
 
   /**
+   * Deletes an image.
    *
-   * @param req
-   * @param res
-   * @param next
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
    */
   async deleteImage (req, res, next) {
     try {
@@ -141,10 +145,11 @@ export class ImagesController {
   }
 
   /**
+   * Edits an image.
    *
-   * @param req
-   * @param res
-   * @param next
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
    */
   async editImage (req, res, next) {
     try {
@@ -174,10 +179,11 @@ export class ImagesController {
   }
 
   /**
+   * Partially edits an image.
    *
-   * @param req
-   * @param res
-   * @param next
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
    */
   async partiallyEditImage (req, res, next) {
     try {
@@ -197,7 +203,7 @@ export class ImagesController {
       })
       res.status(204).end()
     } catch (error) {
-        next(error)
+      next(error)
     }
   }
 }

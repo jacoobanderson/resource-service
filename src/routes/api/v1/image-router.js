@@ -15,10 +15,11 @@ const PermissionLevels = Object.freeze({
 })
 
 /**
+ * Authenticates the jwt.
  *
- * @param req
- * @param res
- * @param next
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
  */
 const authenticateJWT = (req, res, next) => {
   const auth = req.headers.authorization?.split(' ')
@@ -45,15 +46,15 @@ const authenticateJWT = (req, res, next) => {
 }
 
 /**
+ * Checks if a user has permission or not.
  *
- * @param req
- * @param res
- * @param next
- * @param permissionLevel
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ * @param {object} permissionLevel - The level of permission.
  */
 const checkPermission = (req, res, next, permissionLevel) => {
   req.user?.permissionLevel & permissionLevel ? next() : next(createError(403))
-  console.log(req.user.permissionLevel)
 }
 
 router.param('id', (req, res, next, id) => controller.setImage(req, res, next, id))
